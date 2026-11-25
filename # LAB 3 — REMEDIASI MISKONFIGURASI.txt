@@ -1,0 +1,51 @@
+# LAB 3 — REMEDIASI MISKONFIGURASI TERRAFORM
+
+## 1. Tujuan Praktikum
+
+Praktikum ini bertujuan untuk mengidentifikasi dan memperbaiki kesalahan konfigurasi keamanan pada file Terraform menggunakan Checkov. Proses remediasi dilakukan untuk meningkatkan keamanan infrastruktur berbasis Infrastructure as Code (IaC).
+
+## 2. Hasil Scan Awal
+
+Berdasarkan pemeriksaan awal menggunakan Checkov terhadap file `terraform/main.tf`, diperoleh hasil sebagai berikut:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Passed Checks | 20 |
+| Failed Checks | 45 |
+| Skipped Checks | 0 |
+| Total Checks | 65 |
+
+Hasil tersebut menunjukkan masih terdapat 45 pemeriksaan keamanan yang gagal. Temuan tersebar pada beberapa resource AWS, seperti Security Group, IAM, RDS, EC2, CloudTrail, ElastiCache, dan S3.
+
+## 3. Proses Remediasi
+
+Perbaikan dilakukan pada beberapa konfigurasi infrastruktur, antara lain:
+
+1. **Amazon S3:** Memperbaiki konfigurasi akses bucket, mengaktifkan public access block, enkripsi, dan versioning.
+2. **Security Group:** Membatasi akses jaringan agar tidak terlalu terbuka.
+3. **IAM:** Menerapkan prinsip least privilege dan mengganti penggunaan IAM User dengan IAM Role.
+4. **Amazon RDS:** Meningkatkan keamanan database melalui enkripsi, backup, dan konfigurasi akses.
+5. **Amazon EC2:** Mengaktifkan monitoring, mewajibkan penggunaan IMDSv2, dan mengenkripsi volume penyimpanan.
+6. **AWS CloudTrail:** Menambahkan konfigurasi enkripsi menggunakan KMS serta integrasi dengan CloudWatch Logs.
+7. **Amazon ElastiCache:** Mengaktifkan enkripsi saat data disimpan dan saat data dikirim.
+
+## 4. Hasil Scan Setelah Remediasi
+
+Setelah proses perbaikan dilakukan, pemeriksaan ulang menggunakan Checkov menghasilkan:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Passed Checks | 77 |
+| Failed Checks | 15 |
+| Skipped Checks | 0 |
+| Total Checks | 92 |
+
+Jumlah pemeriksaan yang lolos meningkat dari 20 menjadi 77, sedangkan jumlah pemeriksaan yang gagal berkurang dari 45 menjadi 15.
+
+Masih terdapat 15 pemeriksaan yang gagal, terutama berkaitan dengan konfigurasi monitoring RDS, optimasi EC2, CloudTrail, ElastiCache, CloudWatch, KMS, S3, dan Security Group.
+
+## 5. Kesimpulan
+
+Berdasarkan hasil praktikum, penggunaan Checkov membantu mengidentifikasi berbagai kesalahan konfigurasi keamanan pada Terraform. Proses remediasi berhasil meningkatkan jumlah pemeriksaan yang lolos dari 20 menjadi 77 dan mengurangi pemeriksaan yang gagal dari 45 menjadi 15. Dengan demikian, konfigurasi infrastruktur menjadi lebih baik dari sisi keamanan, meskipun masih terdapat beberapa temuan yang belum diperbaiki.
+
+---

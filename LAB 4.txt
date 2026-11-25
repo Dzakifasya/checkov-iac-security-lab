@@ -1,0 +1,101 @@
+
+# LAB 4 — SCAN KUBERNETES YAML & DOCKERFILE
+
+## 1. Tujuan Praktikum
+
+Praktikum ini bertujuan untuk melakukan pemeriksaan keamanan terhadap konfigurasi Kubernetes YAML dan Dockerfile menggunakan Checkov. Pemeriksaan dilakukan dengan membandingkan konfigurasi yang kurang aman (bad) dengan konfigurasi yang telah diperbaiki (good).
+
+## 2. Scan Kubernetes YAML
+
+Pemeriksaan dilakukan terhadap dua file, yaitu `deployment-bad.yaml` dan `deployment-good.yaml`.
+
+### A. Hasil Scan deployment-bad.yaml
+
+Hasil pemeriksaan menggunakan perintah:
+
+`checkov -f .\kubernetes\deployment-bad.yaml --framework kubernetes --compact`
+
+Diperoleh hasil sebagai berikut:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Passed Checks | 69 |
+| Failed Checks | 21 |
+| Skipped Checks | 0 |
+
+File tersebut masih memiliki beberapa konfigurasi yang kurang aman, seperti penggunaan container privileged, mengizinkan privilege escalation, dan tidak menerapkan konfigurasi keamanan container secara memadai.
+
+### B. Hasil Scan deployment-good.yaml
+
+Hasil pemeriksaan menggunakan perintah:
+
+`checkov -f .\kubernetes\deployment-good.yaml --framework kubernetes --compact`
+
+Diperoleh hasil sebagai berikut:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Passed Checks | 83 |
+| Failed Checks | 8 |
+| Skipped Checks | 0 |
+
+Konfigurasi yang lebih aman telah diterapkan, antara lain penggunaan non-root user, menonaktifkan privileged mode dan privilege escalation, mengaktifkan read-only root filesystem, menghapus seluruh Linux capabilities, serta menerapkan resource limits dan seccomp profile.
+
+### C. Analisis Hasil Kubernetes
+
+Jumlah pemeriksaan yang gagal berkurang dari 21 menjadi 8. Sementara itu, jumlah pemeriksaan yang lolos meningkat dari 69 menjadi 83. Hal ini menunjukkan bahwa penerapan security context dan pembatasan hak akses container dapat meningkatkan keamanan konfigurasi Kubernetes.
+
+## 3. Scan Dockerfile
+
+Pemeriksaan selanjutnya dilakukan terhadap `Dockerfile.bad` dan `Dockerfile.good`.
+
+### A. Hasil Scan Dockerfile.bad
+
+Hasil pemeriksaan menggunakan perintah:
+
+`checkov -f .\dockerfile\Dockerfile.bad --framework dockerfile`
+
+Diperoleh hasil sebagai berikut:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Passed Checks | 54 |
+| Failed Checks | 3 |
+| Skipped Checks | 0 |
+
+Dockerfile tersebut masih memiliki beberapa kelemahan, seperti penggunaan base image dengan tag `latest`, tidak adanya instruksi HEALTHCHECK, dan tidak adanya konfigurasi USER untuk menjalankan aplikasi sebagai pengguna non-root.
+
+### B. Hasil Scan Dockerfile.good
+
+Hasil pemeriksaan menggunakan perintah:
+
+`checkov -f .\dockerfile\Dockerfile.good --framework dockerfile`
+
+Diperoleh hasil sebagai berikut:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Passed Checks | 77 |
+| Failed Checks | 0 |
+| Skipped Checks | 0 |
+
+Dockerfile yang telah diperbaiki menggunakan base image dengan versi spesifik, menjalankan aplikasi menggunakan non-root user, menerapkan instalasi dependency tanpa cache, menggunakan HEALTHCHECK, dan mengatur kepemilikan file aplikasi.
+
+### C. Analisis Hasil Dockerfile
+
+Jumlah pemeriksaan yang gagal berkurang dari 3 menjadi 0. Seluruh 77 pemeriksaan keamanan pada `Dockerfile.good` berhasil lolos. Hal ini menunjukkan bahwa penerapan praktik keamanan pada Dockerfile dapat mengurangi risiko yang berasal dari konfigurasi image dan container.
+
+## 4. Rekapitulasi Hasil Lab 4
+
+| Pengujian | Passed | Failed | Skipped |
+|---|---:|---:|---:|
+| Kubernetes Bad | 69 | 21 | 0 |
+| Kubernetes Good | 83 | 8 | 0 |
+| Dockerfile Bad | 54 | 3 | 0 |
+| Dockerfile Good | 77 | 0 | 0 |
+
+## 5. Kesimpulan
+
+Berdasarkan hasil praktikum, Checkov dapat digunakan untuk mengidentifikasi kesalahan konfigurasi keamanan pada Kubernetes YAML dan Dockerfile. Pada pengujian Kubernetes, jumlah pemeriksaan gagal berkurang dari 21 menjadi 8 setelah konfigurasi diperbaiki. Sementara itu, pada pengujian Dockerfile, jumlah pemeriksaan gagal berhasil dikurangi dari 3 menjadi 0.
+
+Praktikum ini menunjukkan pentingnya penerapan prinsip keamanan sejak tahap penulisan konfigurasi infrastruktur dan container. Dengan menggunakan Checkov, potensi kesalahan konfigurasi dapat diketahui lebih awal sebelum konfigurasi digunakan pada lingkungan deployment.

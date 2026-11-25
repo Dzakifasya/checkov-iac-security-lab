@@ -1,0 +1,24 @@
+### Lab 02 – Scan Terraform Awal
+
+**Tujuan:**
+
+Melakukan analisis keamanan statis terhadap konfigurasi Terraform menggunakan Checkov untuk mengidentifikasi konfigurasi infrastruktur yang belum memenuhi standar keamanan.
+
+**Hasil Pengujian:**
+
+Pemindaian dilakukan terhadap file `terraform/main.tf` menggunakan Checkov versi 3.4.10. Hasil pemindaian menunjukkan:
+
+- Passed Checks: 20
+- Failed Checks: 45
+- Skipped Checks: 0
+- Total Checks: 65
+
+Hasil analisis menunjukkan bahwa 45 pemeriksaan keamanan gagal pada 9 resource AWS. Temuan terbanyak terdapat pada IAM Policy dan RDS, masing-masing sebanyak 9 temuan, sedangkan S3 memiliki 8 temuan.
+
+**Analisis:**
+
+Temuan keamanan meliputi konfigurasi Security Group yang terlalu terbuka, kebijakan IAM dengan hak akses berlebihan, konfigurasi enkripsi dan monitoring RDS yang belum memenuhi pemeriksaan keamanan, pengaturan keamanan EC2, CloudTrail, ElastiCache, serta S3.
+
+**Kesimpulan:**
+
+Berdasarkan hasil pemindaian, konfigurasi Terraform awal masih memiliki sejumlah kelemahan dari sisi penerapan praktik keamanan. Checkov berhasil mengidentifikasi 45 pemeriksaan yang gagal dan 20 pemeriksaan yang berhasil. Hasil ini menjadi dasar untuk melakukan perbaikan konfigurasi Terraform pada tahap praktikum berikutnya.

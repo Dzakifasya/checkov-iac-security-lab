@@ -1,0 +1,65 @@
+## **Laporan Lab 1 — Pemeriksaan Keamanan Terraform Menggunakan Checkov**
+
+### **1. Tujuan Praktikum**
+
+Praktikum ini bertujuan untuk melakukan pemeriksaan keamanan terhadap konfigurasi Infrastructure as Code (IaC) menggunakan Checkov. Pemeriksaan dilakukan untuk mengidentifikasi konfigurasi Terraform yang belum memenuhi praktik keamanan yang direkomendasikan sebelum dilakukan perbaikan.
+
+### **2. Tahapan Pelaksanaan**
+
+1. Menyiapkan lingkungan praktikum dan mengaktifkan virtual environment Python.
+2. Menjalankan Checkov untuk memeriksa konfigurasi Terraform.
+3. Mengumpulkan hasil pemeriksaan keamanan.
+4. Mengidentifikasi jumlah pemeriksaan yang berhasil dan gagal.
+5. Menggunakan hasil pemeriksaan awal sebagai *baseline* sebelum melakukan perbaikan konfigurasi Terraform.
+
+### **3. Hasil Pemeriksaan Awal**
+
+**Ringkasan hasil pemeriksaan Checkov**
+
+# **20**
+
+Passed checks
+
+# **45**
+
+Failed checks
+
+# **0**
+
+Skipped checks
+
+**Total pemeriksaan**\
+**65 checks**
+
+30,77% Passed
+
+69,23% Failed
+
+Berdasarkan hasil pemeriksaan, terdapat 20 pemeriksaan yang berhasil memenuhi aturan keamanan (*passed checks*), sedangkan 45 pemeriksaan belum memenuhi aturan keamanan (*failed checks*). Tidak terdapat pemeriksaan yang dilewati (*skipped checks*).
+
+Hasil tersebut menunjukkan bahwa konfigurasi Terraform masih memiliki sejumlah aspek keamanan yang perlu diperbaiki.
+
+### **4. Analisis Hasil**
+
+Hasil pemeriksaan awal menunjukkan bahwa sebagian besar pemeriksaan keamanan masih berstatus gagal, yaitu sebanyak 45 dari total 65 pemeriksaan. Kondisi ini mengindikasikan bahwa konfigurasi Infrastructure as Code yang diperiksa belum sepenuhnya mengikuti praktik keamanan yang direkomendasikan.
+
+Sementara itu, 20 pemeriksaan yang berhasil menunjukkan bahwa beberapa konfigurasi sudah memenuhi aturan keamanan Checkov. Hasil ini digunakan sebagai dasar untuk menentukan bagian konfigurasi yang perlu diperbaiki pada tahap selanjutnya.
+
+### **5. Kesimpulan**
+
+Berdasarkan pemeriksaan awal menggunakan Checkov, diperoleh 20 *passed checks*, 45 *failed checks*, dan 0 *skipped checks* dari total 65 pemeriksaan. Hasil tersebut menjadi *baseline* untuk membandingkan kondisi keamanan konfigurasi Terraform sebelum dan sesudah dilakukan perbaikan.
+
+## **6. Dokumentasi Screenshot**
+
+Untuk melengkapi laporan, gunakan screenshot berikut:
+
+| No. | Bukti dokumentasi            | Keterangan                                     |
+| --- | ---------------------------- | ---------------------------------------------- |
+| 1   | Aktivasi virtual environment | Bukti lingkungan praktikum berhasil diaktifkan |
+| 2   | Perintah pemeriksaan Checkov | Bukti proses pemindaian konfigurasi Terraform  |
+| 3   | Ringkasan hasil pemeriksaan  | Bukti 20 passed, 45 failed, dan 0 skipped      |
+| 4   | Daftar passed checks         | Bukti aturan keamanan yang berhasil dipenuhi   |
+
+**Catatan:** Dari informasi yang kamu berikan, kita baru bisa memastikan angka hasil pemeriksaan. Detail 45 failed checks belum bisa dijelaskan satu per satu tanpa daftar hasilnya.
+
+Lab 1 sudah bisa didokumentasikan sampai tahap *baseline pemeriksaan awal*. Sebelum berpindah ke Lab 2, pastikan screenshot ringkasan hasil dan daftar pemeriksaan tersimpan agar bukti laporan tidak terlewat.

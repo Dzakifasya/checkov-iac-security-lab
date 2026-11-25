@@ -1,0 +1,101 @@
+# LAPORAN PRAKTIKUM DEVSECOPS
+## LAB 5 — MEMBUAT CUSTOM POLICY CHECKOV
+
+### 1. Tujuan Praktikum
+
+Praktikum ini bertujuan untuk membuat dan menguji custom security policy menggunakan Checkov dalam format Python dan YAML. Policy digunakan untuk memastikan setiap resource Amazon S3 Bucket memiliki tag wajib `owner` dan `environment`.
+
+### 2. Lingkungan Praktikum
+
+| Komponen | Keterangan |
+|---|---|
+| Sistem Operasi | Windows |
+| Bahasa Pemrograman | Python |
+| Tools | Checkov |
+| Versi Checkov | 3.4.10 |
+| Framework | Terraform |
+| Direktori Pengujian | `custom-policy` |
+
+### 3. Langkah dan Hasil Praktikum
+
+#### 3.1. Persiapan Struktur Direktori
+
+Membuat struktur direktori untuk menyimpan custom policy Python, custom policy YAML, dan file Terraform sebagai objek pengujian.
+
+Struktur direktori yang digunakan:
+
+```text
+custom-policy/
+├── test.tf
+├── checks-py/
+│   ├── __init__.py
+│   └── s3_tags_check.py
+└── checks-yaml/
+    └── enforce_tags.yaml
+```
+
+File `test.tf` berisi empat resource S3 Bucket dengan kondisi tag yang berbeda, yaitu tanpa tag, tag tidak lengkap, tag lengkap, dan tag minimal sesuai persyaratan.
+
+#### 3.2. Implementasi Custom Policy Python
+
+Membuat custom policy Python menggunakan class `S3RequiredTagsCheck` yang diturunkan dari `BaseResourceCheck`.
+
+Policy menggunakan Check ID `CKV_CUSTOM_S3_1` dan memeriksa keberadaan dua tag wajib, yaitu `owner` dan `environment`.
+
+Jika kedua tag tersedia, pemeriksaan menghasilkan `PASSED`. Sebaliknya, jika salah satu atau keduanya tidak tersedia, pemeriksaan menghasilkan `FAILED`.
+
+Perintah pengujian:
+
+```powershell
+checkov -f .\custom-policy\test.tf --external-checks-dir .\custom-policy\checks-py --skip-check "CKV_AWS_*"
+```
+
+**Hasil pengujian Python:**
+
+| Resource | Hasil |
+|---|---|
+| `aws_s3_bucket.no_tags` | FAILED |
+| `aws_s3_bucket.partial_tags` | FAILED |
+| `aws_s3_bucket.complete_tags` | PASSED |
+| `aws_s3_bucket.minimal_required_tags` | PASSED |
+
+Total hasil custom policy Python adalah 2 pemeriksaan berhasil (PASSED) dan 2 pemeriksaan gagal (FAILED).
+
+#### 3.3. Implementasi Custom Policy YAML
+
+Membuat custom policy dalam format YAML dengan Check ID `CUSTOM_AWS_S3_TAGS`.
+
+Policy menggunakan kondisi `and` untuk memastikan atribut `tags.owner` dan `tags.environment` tersedia pada setiap resource `aws_s3_bucket`.
+
+Dengan demikian, kedua tag harus tersedia agar resource dinyatakan lolos pemeriksaan.
+
+Perintah pengujian:
+
+```powershell
+checkov -f .\custom-policy\test.tf --external-checks-dir .\custom-policy\checks-yaml --skip-check "CKV_AWS_*"
+```
+
+**Hasil pengujian YAML:**
+
+| Resource | Hasil |
+|---|---|
+| `aws_s3_bucket.no_tags` | FAILED |
+| `aws_s3_bucket.partial_tags` | FAILED |
+| `aws_s3_bucket.complete_tags` | PASSED |
+| `aws_s3_bucket.minimal_required_tags` | PASSED |
+
+Total hasil custom policy YAML adalah 2 pemeriksaan berhasil (PASSED) dan 2 pemeriksaan gagal (FAILED).
+
+### 4. Analisis Hasil
+
+Berdasarkan pengujian, custom policy Python dan YAML berhasil diterapkan pada empat resource S3 Bucket.
+
+Kedua metode menghasilkan keluaran yang konsisten. Resource tanpa tag dan resource dengan tag tidak lengkap dinyatakan `FAILED`, sedangkan resource yang memiliki kedua tag wajib dinyatakan `PASSED`.
+
+Hasil tersebut menunjukkan bahwa custom policy dapat digunakan untuk menerapkan standar keamanan organisasi sesuai kebutuhan. Pemeriksaan ini juga membantu memastikan konsistensi pemberian tag pada resource cloud sehingga memudahkan identifikasi kepemilikan dan lingkungan penggunaan resource.
+
+### 5. Kesimpulan
+
+Praktikum Lab 5 berhasil dilaksanakan. Custom policy menggunakan Python dan YAML berhasil dibuat serta diuji menggunakan Checkov versi 3.4.10.
+
+Kedua policy mampu mendeteksi S3 Bucket yang tidak memiliki tag `owner` dan `environment`, serta meloloskan resource yang telah memenuhi persyaratan. Dengan demikian, custom policy Checkov dapat digunakan untuk menambahkan aturan keamanan khusus di luar pemeriksaan bawaan yang tersedia.
